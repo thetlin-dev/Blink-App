@@ -206,4 +206,215 @@
       color: #888;
     }
     .edit-btn {
-      background: rgba(255, 255, 255,
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: #fff;
+      padding: 8px 24px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .grid-item {
+      width: 100%;
+      height: 130px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    /* Bottom Nav Bar */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 55px;
+      background-color: #000;
+      z-index: 10;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 0.5px solid rgba(255,255,255,0.1);
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 10px;
+      color: #888;
+      cursor: pointer;
+    }
+    .nav-item.active {
+      color: #fff;
+    }
+    .nav-icon {
+      font-size: 18px;
+      margin-bottom: 2px;
+    }
+    .upload-btn {
+      width: 38px;
+      height: 28px;
+      background: linear-gradient(90deg, #00f2fe, #ff0050);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-weight: bold;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <div id="feedPage" class="feed-view">
+      
+      <div class="video-card">
+        <video loop playsinline autoplay muted src="https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4"></video>
+        <div class="overlay"></div>
+        <div class="top-header">
+          <div class="app-logo">Blink</div>
+          <div class="feed-tabs">
+            <span>Following</span>
+            <span class="active">For You</span>
+          </div>
+          <div style="width: 40px;"></div>
+        </div>
+        <div class="actions">
+          <div class="action-btn" onclick="toggleLike(this)">
+            <div class="icon-circle">❤️</div>
+            <span class="like-count">12.5k</span>
+          </div>
+          <div class="action-btn"><div class="icon-circle">💬</div><span>342</span></div>
+          <div class="action-btn"><div class="icon-circle">🔗</div><span>Share</span></div>
+        </div>
+        <div class="bottom-info">
+          <div class="username">@thetlin_dev</div>
+          <div class="description">Welcome to Blink! 🚀 Swiping videos on web app #Blink #Tech</div>
+        </div>
+      </div>
+
+      <div class="video-card">
+        <video loop playsinline muted src="https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4"></video>
+        <div class="overlay"></div>
+        <div class="top-header">
+          <div class="app-logo">Blink</div>
+          <div class="feed-tabs">
+            <span>Following</span>
+            <span class="active">For You</span>
+          </div>
+          <div style="width: 40px;"></div>
+        </div>
+        <div class="actions">
+          <div class="action-btn" onclick="toggleLike(this)">
+            <div class="icon-circle">❤️</div>
+            <span class="like-count">45.2k</span>
+          </div>
+          <div class="action-btn"><div class="icon-circle">💬</div><span>890</span></div>
+          <div class="action-btn"><div class="icon-circle">🔗</div><span>Share</span></div>
+        </div>
+        <div class="bottom-info">
+          <div class="username">@nature_explorer</div>
+          <div class="description">Relaxing ocean vibes 🌊✨ #nature #ocean #Blink</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="profilePage" class="profile-view">
+      <div class="profile-header">
+        <div class="profile-avatar">👨‍💻</div>
+        <div class="profile-name">@thetlin_dev</div>
+        <div class="profile-bio">Web Developer | Creator of Blink App 🚀</div>
+        
+        <div class="stats-container">
+          <div class="stat-item"><span class="stat-value">120</span><span class="stat-label">Following</span></div>
+          <div class="stat-item"><span class="stat-value">4.8k</span><span class="stat-label">Followers</span></div>
+          <div class="stat-item"><span class="stat-value">57.7k</span><span class="stat-label">Likes</span></div>
+        </div>
+        
+        <button class="edit-btn">Edit Profile</button>
+      </div>
+
+      <div class="video-grid">
+        <div class="grid-item" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=400&q=80');"></div>
+        <div class="grid-item" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80');"></div>
+        <div class="grid-item" style="background-image: url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=400&q=80');"></div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item active" onclick="showPage('feed', this)">
+        <div class="nav-icon">🏠</div>
+        <span>Home</span>
+      </div>
+      <div class="nav-item" onclick="showPage('feed', this)">
+        <div class="nav-icon">🔍</div>
+        <span>Discover</span>
+      </div>
+      <div class="upload-btn">+</div>
+      <div class="nav-item" onclick="showPage('feed', this)">
+        <div class="nav-icon">💬</div>
+        <span>Inbox</span>
+      </div>
+      <div class="nav-item" onclick="showPage('profile', this)">
+        <div class="nav-icon">👤</div>
+        <span>Profile</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle Pages Function
+    function showPage(page, el) {
+      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+      el.classList.add('active');
+      
+      if(page === 'profile') {
+        document.getElementById('feedPage').style.display = 'none';
+        document.getElementById('profilePage').style.display = 'block';
+      } else {
+        document.getElementById('feedPage').style.display = 'block';
+        document.getElementById('profilePage').style.display = 'none';
+      }
+    }
+
+    // Interactive Like Button Function
+    function toggleLike(element) {
+      const circle = element.querySelector('.icon-circle');
+      const countSpan = element.querySelector('.like-count');
+      let isLiked = circle.classList.contains('liked');
+
+      if (!isLiked) {
+        circle.classList.add('liked');
+        countSpan.textContent = 'Liked';
+      } else {
+        circle.classList.remove('liked');
+        countSpan.textContent = '12.5k';
+      }
+    }
+
+    // Auto Play Videos on Scroll
+    const videos = document.querySelectorAll('video');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.play();
+        } else {
+          entry.target.pause();
+        }
+      });
+    }, { threshold: 0.6 });
+
+    videos.forEach(video => observer.observe(video));
+  </script>
+
+</body>
+</html>
