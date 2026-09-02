@@ -43,7 +43,8 @@
       width: 100%;
       height: 100vh;
       scroll-snap-align: start;
-      background: #000;
+      background-size: cover;
+      background-position: center;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -126,10 +127,10 @@
       justify-content: center;
       font-size: 20px;
       margin-bottom: 4px;
-      transition: transform 0.2s;
+      transition: transform 0.2s, background 0.2s;
     }
     .icon-circle.liked {
-      color: #ff0050;
+      background: rgba(255, 0, 80, 0.8);
       transform: scale(1.1);
     }
     .bottom-info {
@@ -225,7 +226,6 @@
       height: 130px;
       background-size: cover;
       background-position: center;
-      position: relative;
     }
 
     /* Bottom Nav Bar */
@@ -276,8 +276,8 @@
   <div class="app-container">
     <div id="feedPage" class="feed-view">
       
-      <div class="video-card">
-        <video loop playsinline autoplay muted src="https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4"></video>
+      <div class="video-card" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80');">
+        <video loop playsinline autoplay muted src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"></video>
         <div class="overlay"></div>
         <div class="top-header">
           <div class="app-logo">Blink</div>
@@ -301,8 +301,8 @@
         </div>
       </div>
 
-      <div class="video-card">
-        <video loop playsinline muted src="https://assets.mixkit.co/videos/preview/mixkit-waves-in-the-water-1164-large.mp4"></video>
+      <div class="video-card" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80');">
+        <video loop playsinline muted src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"></video>
         <div class="overlay"></div>
         <div class="top-header">
           <div class="app-logo">Blink</div>
@@ -372,7 +372,6 @@
   </div>
 
   <script>
-    // Toggle Pages Function
     function showPage(page, el) {
       document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
       el.classList.add('active');
@@ -386,7 +385,6 @@
       }
     }
 
-    // Interactive Like Button Function
     function toggleLike(element) {
       const circle = element.querySelector('.icon-circle');
       const countSpan = element.querySelector('.like-count');
@@ -401,12 +399,11 @@
       }
     }
 
-    // Auto Play Videos on Scroll
     const videos = document.querySelectorAll('video');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.play();
+          entry.target.play().catch(() => {});
         } else {
           entry.target.pause();
         }
