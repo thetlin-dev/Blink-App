@@ -10,13 +10,27 @@
             background-color: #000;
             color: #fff;
             font-family: sans-serif;
-            padding: 20px;
+            padding: 15px;
         }
         .card {
             background-color: #1a1a1a;
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 15px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .card h3 {
+            margin-top: 0;
+            font-size: 18px;
+        }
+        .card p {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .card img, .card video {
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -24,15 +38,21 @@
 
     <h2>Blink Feed</h2>
 
-    <!-- ဒီနေရာမှာ မိမိပြချင်တဲ့ Content / Video / Image များ ထည့်ပါ -->
+    <!-- ၁။ ဗီဒီယိုပါဝင်သော အကြောင်းအရာ -->
     <div class="card">
-        <h3>Post Title 1</h3>
-        <p>This is the first post content.</p>
+        <h3>Featured Movie Recap Video</h3>
+        <p>ဒီမှာ ဗီဒီယို အကြောင်းအရာကို ကြည့်ရှုနိုင်ပါတယ်။</p>
+        <video controls poster="https://via.placeholder.com/600x350/222/fff?text=Video+Thumbnail">
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
     </div>
 
+    <!-- ၂။ စာသားနှင့် ပုံပါဝင်သော အကြောင်းအရာ -->
     <div class="card">
-        <h3>Post Title 2</h3>
-        <p>This is the second post content.</p>
+        <h3>Latest News & Updates</h3>
+        <img src="https://via.placeholder.com/600x300/333/fff?text=Blink+Post+Image" alt="Post Image">
+        <p>ဒါကတော့ စာသားနဲ့ ပုံတွဲပြထားတဲ့ အကြောင်းအရာ ဖြစ်ပါတယ်။ မိမိ စာသားနဲ့ ပုံလင့်ခ်များကို ဒီနေရာမှာ အစားထိုးနိုင်ပါတယ်။</p>
     </div>
 
 </body>
