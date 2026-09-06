@@ -1,57 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blink</title>
-    <style>
-        body {
-            margin: 0;
-            background-color: #000;
-            color: #fff;
-            font-family: sans-serif;
-            padding: 15px;
-        }
-        .card {
-            background-color: #1a1a1a;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        .card h3 {
-            margin-top: 0;
-            font-size: 18px;
-        }
-        .card p {
-            color: #ccc;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        .card img, .card video {
-            width: 100%;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-    </style>
-</head>
-<body>
-
-    <h2>Blink Feed</h2>
-
-    <div class="card">
-        <h3>Featured Movie Recap Video</h3>
-        <p>ဒီမှာ ဗီဒီယို အကြောင်းအရာကို ကြည့်ရှုနိုင်ပါတယ်။</p>
-        <video controls poster="https://via.placeholder.com/600x350/222/fff?text=Video+Thumbnail">
-            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-        </video>
-    </div>
-
-    <div class="card">
-        <h3>Latest News & Updates</h3>
-        <img src="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=600" alt="Post Image">
-
-        <p>ဒါကတော့ စာသားနဲ့ ပုံတွဲပြထားတဲ့ အကြောင်းအရာ ဖြစ်ပါတယ်။</p>
-    </div>
-
-</body>
-</html>
+lib/
+├── core/
+│   ├── constants/
+│   └── theme/
+├── features/
+│   ├── video_feed/
+│   │   ├── presentation/
+│   │   │   ├── screens/ (main_feed_screen.dart)
+│   │   │   └── widgets/ (canvas_overlay.dart)
+│   ├── discovery/
+│   ├── profile/
+│   └── wellbeing/
+│       └── presentation/ (break_reminder_modal.dart)
+└── main.dart
