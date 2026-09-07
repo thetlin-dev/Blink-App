@@ -22,18 +22,14 @@ jobs:
         with:
           flutter-version: '3.x'
 
-      - name: Find pubspec.yaml and Build APK
-        run: |
-          PUBSPEC_PATH=$(find . -name "pubspec.yaml" -not -path "*/.*" | head -n 1)
-          if [ -z "$PUBSPEC_PATH" ]; then
-            echo "Error: pubspec.yaml not found in repository!"
-            exit 1
-          fi
-          PROJECT_DIR=$(dirname "$PUBSPEC_PATH")
-          echo "Found project directory: $PROJECT_DIR"
-          cd "$PROJECT_DIR"
-          flutter pub get
-          flutter build apk --split-per-abi
+      - name: Generate Missing Platforms
+        run: flutter create . --platforms=android
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --split-per-abi
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
