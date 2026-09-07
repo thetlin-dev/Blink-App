@@ -13,9 +13,9 @@ class NavigationWrapper extends StatefulWidget {
 }
 
 class _NavigationWrapperState extends State<NavigationWrapper> {
-  int _selectedIndex = 0;
+  // App စဖွင့်ချိန်တွင် Home Screen (Index 2) ကို ပထမဆုံး ပြသရန် 2 သို့ ပြောင်းထားပါသည်
+  int _selectedIndex = 2;
 
-  // Create နဲ့ Home နေရာချင်း လဲလှယ်ထားပါသည်
   final List<Widget> _screens = [
     const CreatePostScreen(),     // Index 0: Create
     const SearchExploreScreen(),  // Index 1: Explore
