@@ -22,32 +22,16 @@ jobs:
         with:
           flutter-version: '3.x'
 
-      - name: Check Directory Structure
-        run: ls -R
-
       - name: Install Dependencies
-        run: |
-          if [ -f "pubspec.yaml" ]; then
-            flutter pub get
-          elif [ -f "Blink-App/pubspec.yaml" ]; then
-            cd Blink-App && flutter pub get
-          else
-            find . -name "pubspec.yaml" -execdir flutter pub get \;
-          fi
+        run: flutter pub get
+        working-directory: .
 
       - name: Build APK
-        run: |
-          if [ -f "pubspec.yaml" ]; then
-            flutter build apk --split-per-abi
-          elif [ -f "Blink-App/pubspec.yaml" ]; then
-            cd Blink-App && flutter build apk --split-per-abi
-          else
-            TARGET_DIR=$(dirname $(find . -name "pubspec.yaml" | head -n 1))
-            cd $TARGET_DIR && flutter build apk --split-per-abi
-          fi
+        run: flutter build apk --split-per-abi
+        working-directory: .
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
-          path: '**/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk'
+          path: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
