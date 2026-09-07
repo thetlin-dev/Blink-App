@@ -15,12 +15,13 @@ class NavigationWrapper extends StatefulWidget {
 class _NavigationWrapperState extends State<NavigationWrapper> {
   int _selectedIndex = 0;
 
+  // Create နဲ့ Home နေရာချင်း လဲလှယ်ထားပါသည်
   final List<Widget> _screens = [
-    const MainFeedScreen(),
-    const SearchExploreScreen(),
-    const CreatePostScreen(),
-    const NotificationsScreen(),
-    const SettingsScreen(),
+    const CreatePostScreen(),     // Index 0: Create
+    const SearchExploreScreen(),  // Index 1: Explore
+    const MainFeedScreen(),       // Index 2: Home
+    const NotificationsScreen(),  // Index 3: Activity
+    const SettingsScreen(),       // Index 4: Profile
   ];
 
   void _onItemTapped(int index) {
@@ -45,16 +46,16 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.add_box, size: 32),
+            label: 'Create',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Explore',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_box, size: 32),
-            label: 'Create',
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
