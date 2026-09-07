@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main_feed_v2.dart';
+import 'navigation_wrapper.dart';
 
 void main() {
   runApp(const BlinkApp());
@@ -18,7 +18,7 @@ class BlinkApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.black,
         useMaterial3: true,
       ),
-      home: const MainFeedScreen(),
+      home: const NavigationWrapper(),
     );
   }
 }
