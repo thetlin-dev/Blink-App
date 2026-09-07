@@ -3,6 +3,66 @@ import 'package:flutter/material.dart';
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
+  // Settings Menu Bottom Sheet ပြသပေးသည့် Function
+  void _showSettingsMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.grey[900],
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[600],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Settings & Privacy',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 15),
+              ListTile(
+                leading: const Icon(Icons.person_outline, color: Colors.white),
+                title: const Text('Account Settings', style: TextStyle(color: Colors.white)),
+                onTap: () => Navigator.pop(context),
+              ),
+              ListTile(
+                leading: const Icon(Icons.lock_outline, color: Colors.white),
+                title: const Text('Privacy & Safety', style: TextStyle(color: Colors.white)),
+                onTap: () => Navigator.pop(context),
+              ),
+              ListTile(
+                leading: const Icon(Icons.notifications_none, color: Colors.white),
+                title: const Text('Notifications', style: TextStyle(color: Colors.white)),
+                onTap: () => Navigator.pop(context),
+              ),
+              ListTile(
+                leading: const Icon(Icons.logout, color: Colors.redAccent),
+                title: const Text('Log Out', style: TextStyle(color: Colors.redAccent)),
+                onTap: () => Navigator.pop(context),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +77,7 @@ class SettingsScreen extends StatelessWidget {
             actions: [
               IconButton(
                 icon: const Icon(Icons.settings, color: Colors.white),
-                onPressed: () {},
+                onPressed: () => _showSettingsMenu(context),
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
@@ -212,7 +272,7 @@ class SettingsScreen extends StatelessWidget {
                               const Icon(Icons.play_arrow, color: Colors.white, size: 14),
                               const SizedBox(width: 2),
                               Text(
-                                '${(index + 1) * 1.2}k',
+                                '${((index + 1) * 1.2).toStringAsFixed(1)}k',
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 11,
