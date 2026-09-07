@@ -10,14 +10,14 @@ class ProfileScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       body: CustomScrollView(
         slivers: [
-          // Banner Video Loop Area
+          // Banner Video & Header with Top Settings Button
           SliverAppBar(
-            expandedHeight: 200,
+            expandedHeight: 220,
             pinned: true,
             backgroundColor: Colors.black,
             actions: [
               IconButton(
-                icon: const Icon(Icons.settings, color: Colors.white),
+                icon: const Icon(Icons.settings_outlined, color: Colors.white, size: 26),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -27,89 +27,158 @@ class ProfileScreen extends StatelessWidget {
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                color: Colors.grey[900],
-                child: const Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.play_circle_outline, color: Colors.white38),
-                      SizedBox(width: 8),
-                      Text('Profile Banner Video Loop Area', style: TextStyle(color: Colors.white38)),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          // Profile Header Section
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
+              background: Stack(
+                fit: StackFit.expand,
                 children: [
-                  // 3D Avatar
-                  Stack(
-                    alignment: Alignment.bottomRight,
-                    children: [
-                      const CircleAvatar(
-                        radius: 45,
-                        backgroundColor: Color(0xFFFF2C55),
-                        child: Icon(Icons.person, size: 50, color: Colors.white),
+                  // Profile Banner Video Loop Effect
+                  Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.purple, Colors.blueAccent, Colors.black],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Colors.blueAccent,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.3d_rotation, size: 14, color: Colors.white),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Thet Lin',
-                    style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const Text(
-                    '@thetlin_dev',
-                    style: TextStyle(color: Colors.white54, fontSize: 14),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Short video creator & developer 🚀',
-                    style: TextStyle(color: Colors.white87),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Stats Row
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _StatItem(label: 'Following', count: '240'),
-                      _StatItem(label: 'Followers', count: '12.5K'),
-                      _StatItem(label: 'Likes', count: '85K'),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Edit Profile
-                  OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.white38),
-                      minimumSize: const Size(double.infinity, 40),
                     ),
-                    onPressed: () {},
-                    child: const Text('Edit Profile', style: TextStyle(color: Colors.white)),
+                    child: const Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.movie_creation_outlined, color: Colors.white54, size: 20),
+                          SizedBox(width: 8),
+                          Text(
+                            'Profile Banner Video Loop',
+                            style: TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.transparent, Colors.black.withOpacity(0.9)],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
           ),
 
-          // Content Grid View
+          // Profile Details Section
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  // 3D Animated Avatar
+                  Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: const LinearGradient(
+                            colors: [Colors.pinkAccent, Colors.cyanAccent],
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.pinkAccent.withOpacity(0.5),
+                              blurRadius: 15,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        ),
+                        child: const CircleAvatar(
+                          radius: 45,
+                          backgroundColor: Colors.grey,
+                          child: Icon(Icons.person, size: 50, color: Colors.white),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.cyanAccent,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Text(
+                          '3D',
+                          style: TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Name & Username
+                  const Text(
+                    'Thet Lin Dev',
+                    style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    '@thetlin_dev',
+                    style: TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Bio
+                  const Text(
+                    '🎬 Short Video Creator | Mobile App Developer\nWelcome to my Blink Profile! ✨',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white70, fontSize: 13),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Follower / Following / Likes Stats
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildStatColumn('Following', '248'),
+                      _buildStatColumn('Followers', '12.5K'),
+                      _buildStatColumn('Likes', '84.2K'),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Edit Profile Button
+                  OutlinedButton(
+                    onPressed: () {},
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Colors.grey),
+                      minimumSize: const Size(double.infinity, 40),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: const Text('Edit Profile', style: TextStyle(color: Colors.white)),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+          ),
+
+          // Content Grid Header
+          SliverToBoxAdapter(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              decoration: const BoxDecoration(
+                border: Border(bottom: BorderSide(color: Colors.white12)),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Icon(Icons.grid_on, color: Colors.white),
+                  Icon(Icons.favorite_border, color: Colors.grey),
+                  Icon(Icons.bookmark_border, color: Colors.grey),
+                ],
+              ),
+            ),
+          ),
+
+          // Content Grid Videos
           SliverGrid(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
@@ -120,32 +189,50 @@ class ProfileScreen extends StatelessWidget {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 return Container(
-                  color: Colors.grey[850],
-                  child: Center(
-                    child: Icon(Icons.play_arrow, color: Colors.white.withOpacity(0.3)),
+                  color: Colors.grey[900],
+                  child: Stack(
+                    alignment: Alignment.bottomLeft,
+                    children: [
+                      Center(
+                        child: Icon(Icons.play_circle_outline, color: Colors.white.withOpacity(0.5), size: 30),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.play_arrow, color: Colors.white, size: 14),
+                            const SizedBox(width: 2),
+                            Text(
+                              '${(index + 1) * 1.2}k',
+                              style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 );
               },
-              childCount: 15,
+              childCount: 12,
             ),
           ),
         ],
       ),
     );
   }
-}
 
-class _StatItem extends StatelessWidget {
-  final String label;
-  final String count;
-  const _StatItem({required this.label, required this.count});
-
-  @override
-  Widget build(BuildContext context) {
+  static Widget _buildStatColumn(String label, String count) {
     return Column(
       children: [
-        Text(count, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-        Text(label, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+        Text(
+          count,
+          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: const TextStyle(color: Colors.grey, fontSize: 12),
+        ),
       ],
     );
   }
