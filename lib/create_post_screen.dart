@@ -254,9 +254,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         ),
       ),
     );
-  }
-
-  // Side Control Button UI Helper
+      // Side Control Button UI Helper
   Widget _buildSideButton({
     required IconData icon,
     required String label,
@@ -280,9 +278,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    }
   }
-}
+          
