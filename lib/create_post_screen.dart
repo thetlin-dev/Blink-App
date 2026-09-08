@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:camera/camera.dart';
 
 class CreatePostScreen extends StatefulWidget {
-  const CreatePostScreen({Key? key}) : super(key:Key? key);
+  const CreatePostScreen({super.key});
 
   @override
   State<CreatePostScreen> createState() => _CreatePostScreenState();
