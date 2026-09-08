@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
@@ -10,170 +8,11 @@ class CreatePostScreen extends StatefulWidget {
 }
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
+  // State Variables
   bool isFrontCamera = true;
-  String selectedSpeed = '1.0x';
-  String? selectedMusic;
-  XFile? selectedFile;
-  final ImagePicker _picker = ImagePicker();
-
-  // ဖုန်း Gallery ထဲမှ ဓာတ်ပုံ ရွေးချယ်သည့် Function
-  Future<void> _pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        selectedFile = image;
-      });
-      if (mounted) {
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Selected Photo: ${image.name}')),
-        );
-      }
-    }
-  }
-
-  // ဖုန်း Gallery ထဲမှ ဗီဒီယို ရွေးချယ်သည့် Function
-  Future<void> _pickVideo() async {
-    final XFile? video = await _picker.pickVideo(source: ImageSource.gallery);
-    if (video != null) {
-      setState(() {
-        selectedFile = video;
-      });
-      if (mounted) {
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Selected Video: ${video.name}')),
-        );
-      }
-    }
-  }
-
-  // Music Selection Sheet
-  void _showMusicPicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.grey[900],
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (BuildContext context) {
-        final songs = [
-          'Trending Song 1 - Popular Artist',
-          'Acoustic Chill Beats',
-          'Viral TikTok Sound 2026',
-          'Lofi Study Music',
-          'Pop Hits Instrumental',
-        ];
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[600],
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Select Music / Sound',
-                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 12),
-              Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: songs.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: const Icon(Icons.music_note, color: Colors.pinkAccent),
-                      title: Text(songs[index], style: const TextStyle(color: Colors.white)),
-                      onTap: () {
-                        setState(() {
-                          selectedMusic = songs[index];
-                        });
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Selected Music: ${songs[index]}')),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  // Upload Media Panel
-  void _showGalleryPicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.grey[900],
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Upload Media',
-                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    onTap: _pickImage,
-                    child: Column(
-                      children: const [
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundColor: Colors.pinkAccent,
-                          child: Icon(Icons.photo_library, color: Colors.white, size: 28),
-                        ),
-                        SizedBox(height: 8),
-                        Text('Select Photo', style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: _pickVideo,
-                    child: Column(
-                      children: const [
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundColor: Colors.purple,
-                          child: Icon(Icons.video_library, color: Colors.white, size: 28),
-                        ),
-                        SizedBox(height: 8),
-                        Text('Select Video', style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  double selectedSpeed = 1.0;
+  bool isFilterOn = false;
+  int timerSeconds = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -182,46 +21,40 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            // Display Image/Video Preview or Camera Text
+            // 1. Camera Preview Center Area
             Center(
-              child: selectedFile != null
-                  ? Image.file(File(selectedFile!.path), fit: BoxFit.cover)
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.videocam_outlined, color: Colors.white38, size: 80),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Camera Preview (${isFrontCamera ? "Front" : "Back"})',
-                          style: const TextStyle(color: Colors.white38, fontSize: 16),
-                        ),
-                        if (selectedMusic != null) ...[
-                          const SizedBox(height: 12),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.pinkAccent.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(color: Colors.pinkAccent),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.music_note, color: Colors.pinkAccent, size: 16),
-                                const SizedBox(width: 6),
-                                Text(
-                                  selectedMusic!,
-                                  style: const TextStyle(color: Colors.white, fontSize: 13),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ],
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.videocam_outlined,
+                    size: 64,
+                    color: isFilterOn ? Colors.pinkAccent : Colors.grey[700],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                   'Camera Preview (${isFrontCamera ? 'Front' : 'Back'})',
+                   style: TextStyle(
+                    color: Colors.grey[400],
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+  ),
+),
+
+                  ),
+                  if (timerSeconds > 0)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        'Timer set: ${timerSeconds}s',
+                        style: const TextStyle(color: Colors.pinkAccent, fontSize: 13),
+                      ),
                     ),
+                ],
+              ),
             ),
 
-            // Top Control Bar
+            // 2. Top Bar (Close and Next)
             Positioned(
               top: 16,
               left: 16,
@@ -231,7 +64,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.close, color: Colors.white, size: 28),
-                    onPressed: () {},
+                    onPressed: () => Navigator.maybePop(context),
                   ),
                   const Text(
                     'Create Post',
@@ -244,7 +77,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   TextButton(
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Proceeding to Post Edit...')),
+                        const SnackBar(content: Text('Proceeding to next step...')),
                       );
                     },
                     child: const Text(
@@ -260,83 +93,128 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               ),
             ),
 
-            // Right Side Controls
+            // 3. Right Side Control Panel (Flip, Speed, Filter, Timer)
             Positioned(
               top: 80,
               right: 16,
               child: Column(
                 children: [
-                  _buildSideIconButton(
-                    icon: Icons.flip_camera_android,
+                  // Flip Button
+                  _buildSideButton(
+                    icon: Icons.flip_camera_ios,
                     label: 'Flip',
+                    isActive: false,
                     onTap: () {
                       setState(() {
                         isFrontCamera = !isFrontCamera;
                       });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            isFrontCamera ? 'Switched to Front Camera' : 'Switched to Back Camera',
+                          ),
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
                     },
                   ),
                   const SizedBox(height: 20),
-                  _buildSideIconButton(
+
+                  // Speed Button
+                  _buildSideButton(
                     icon: Icons.speed,
-                    label: selectedSpeed,
+                    label: '${selectedSpeed}x',
+                    isActive: selectedSpeed != 1.0,
                     onTap: () {
                       setState(() {
-                        selectedSpeed = selectedSpeed == '1.0x' ? '2.0x' : '1.0x';
+                        if (selectedSpeed == 1.0) {
+                          selectedSpeed = 2.0;
+                        } else if (selectedSpeed == 2.0) {
+                          selectedSpeed = 0.5;
+                        } else {
+                          selectedSpeed = 1.0;
+                        }
                       });
                     },
                   ),
                   const SizedBox(height: 20),
-                  _buildSideIconButton(
+
+                  // Filters Button
+                  _buildSideButton(
                     icon: Icons.auto_awesome,
                     label: 'Filters',
+                    isActive: isFilterOn,
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Filter Panel Opened')),
-                      );
+                      setState(() {
+                        isFilterOn = !isFilterOn;
+                      });
                     },
                   ),
                   const SizedBox(height: 20),
-                  _buildSideIconButton(
+
+                  // Timer Button
+                  _buildSideButton(
                     icon: Icons.timer,
-                    label: 'Timer',
+                    label: timerSeconds == 0 ? 'Timer' : '${timerSeconds}s',
+                    isActive: timerSeconds > 0,
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Timer Set to 3s')),
-                      );
+                      setState(() {
+                        if (timerSeconds == 0) {
+                          timerSeconds = 3;
+                        } else if (timerSeconds == 3) {
+                          timerSeconds = 10;
+                        } else {
+                          timerSeconds = 0;
+                        }
+                      });
                     },
                   ),
                 ],
               ),
             ),
 
-            // Bottom Control Bar
+            // 4. Bottom Controls Area (Gallery, Record, Music)
             Positioned(
               bottom: 30,
-              left: 0,
-              right: 0,
+              left: 24,
+              right: 24,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  GestureDetector(
-                    onTap: () => _showGalleryPicker(context),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
+                  // Gallery Button
+                  IconButton(
+                    iconSize: 40,
+                    icon: Container(
+                      padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.grey[850],
+                        color: Colors.grey[800],
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(Icons.photo_library, color: Colors.white, size: 28),
+                      child: const Icon(Icons.photo_library, color: Colors.white, size: 24),
                     ),
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Opening Gallery...')),
+                      );
+                    },
                   ),
+
+                  // Record Button
                   GestureDetector(
                     onTap: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Recording Started...')),
+                        SnackBar(
+                          content: Text(
+                            timerSeconds > 0
+                                ? 'Recording starts in $timerSeconds seconds...'
+                                : 'Recording started!',
+                          ),
+                        ),
                       );
                     },
                     child: Container(
-                      height: 75,
-                      width: 75,
+                      width: 72,
+                      height: 72,
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
@@ -351,16 +229,23 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () => _showMusicPicker(context),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
+
+                  // Music Button
+                  IconButton(
+                    iconSize: 40,
+                    icon: Container(
+                      padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.grey[850],
+                        color: Colors.grey[800],
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(Icons.music_note, color: Colors.white, size: 28),
+                      child: const Icon(Icons.music_note, color: Colors.white, size: 24),
                     ),
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Select Sound/Music')),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -371,20 +256,30 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     );
   }
 
-  Widget _buildSideIconButton({
+  // Side Control Button UI Helper
+  Widget _buildSideButton({
     required IconData icon,
     required String label,
+    required bool isActive,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
         children: [
-          Icon(icon, color: Colors.white, size: 28),
+          Icon(
+            icon,
+            color: isActive ? Colors.pinkAccent : Colors.white,
+            size: 28,
+          ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(color: Colors.white, fontSize: 11),
+            style: TextStyle(
+              color: isActive ? Colors.pinkAccent : Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),
