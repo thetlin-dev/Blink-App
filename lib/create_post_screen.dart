@@ -11,7 +11,6 @@ class CreatePostScreen extends StatefulWidget {
 }
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
-  // Camera & Media States
   CameraController? _cameraController;
   List<CameraDescription>? _cameras;
   int _selectedCameraIndex = 0;
@@ -19,11 +18,15 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   File? _selectedFile;
   bool _isVideo = false;
+  bool _isRecording = false;
 
-  // Controls States
-  bool _isFilterOn = false;
-  String _selectedSpeed = '1.0x';
+  // Controls State
+  bool _isFlashOn = false;
+  bool _isGridOn = false;
   int _timerSeconds = 0;
+  bool _isFilterOn = false;
+  String _selectedMode = 'PHOTO'; // '3m', '60s', '15s', 'PHOTO', 'TEXT'
+  String _selectedBottomTab = 'CAMERA'; // 'CAMERA', 'CREATE', 'LIVE'
 
   final ImagePicker _picker = ImagePicker();
 
@@ -33,7 +36,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     _initCamera();
   }
 
-  // ၁။ Camera Device စတင်မောင်းနှင်ရန်
   Future<void> _initCamera() async {
     try {
       _cameras = await availableCameras();
@@ -68,14 +70,22 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     }
   }
 
-  // ၂။ Camera Front / Back Flip လုပ်ရန်
   void _toggleCamera() {
     if (_cameras == null || _cameras!.length < 2) return;
     _selectedCameraIndex = (_selectedCameraIndex == 0) ? 1 : 0;
     _setupCamera(_cameras![_selectedCameraIndex]);
   }
 
-  // ၃။ Gallery မှ Photo သို့မဟုတ် Video ရွေးရန်
+  void _toggleFlash() {
+    if (_cameraController == null) return;
+    setState(() {
+      _isFlashOn = !_isFlashOn;
+    });
+    _cameraController!.setFlashMode(
+      _isFlashOn ? FlashMode.torch : FlashMode.off,
+    );
+  }
+
   Future<void> _pickMedia(bool isVideo) async {
     final XFile? file = isVideo
         ? await _picker.pickVideo(source: ImageSource.gallery)
@@ -89,17 +99,56 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     }
   }
 
-  // ရွေးထားသည့် File ကို ပြန်ဖြုတ်ပြီး Camera UI ထံ ပြန်သွားရန်
-  void _clearSelectedMedia() {
-    setState(() {
-      _selectedFile = null;
-    });
+  Future<void> _handleShutterPress() async {
+    if (_selectedFile != null) {
+      setState(() => _selectedFile = null);
+      return;
+    }
+
+    if (_selectedMode == 'PHOTO') {
+      if (_cameraController != null && _cameraController!.value.isInitialized) {
+        final image = await _cameraController!.takePicture();
+        setState(() {
+          _selectedFile = File(image.path);
+          _isVideo = false;
+        });
+      }
+    } else if (['3m', '60s', '15s'].contains(_selectedMode)) {
+      if (_cameraController == null || !_cameraController!.value.isInitialized) return;
+
+      if (_isRecording) {
+        final video = await _cameraController!.stopVideoRecording();
+        setState(() {
+          _isRecording = false;
+          _selectedFile = File(video.path);
+          _isVideo = true;
+        });
+      } else {
+        await _cameraController!.startVideoRecording();
+        setState(() {
+          _isRecording = true;
+        });
+      }
+    }
   }
 
   @override
   void dispose() {
     _cameraController?.dispose();
     super.dispose();
+  }
+
+  Widget _applyFilter(Widget child) {
+    if (!_isFilterOn) return child;
+    return ColorFiltered(
+      colorFilter: const ColorFilter.matrix(<double>[
+        0.2126, 0.7152, 0.0722, 0, 0,
+        0.2126, 0.7152, 0.0722, 0, 0,
+        0.2126, 0.7152, 0.0722, 0, 0,
+        0,      0,      0,      1, 0,
+      ]),
+      child: child,
+    );
   }
 
   @override
@@ -109,185 +158,209 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            // --- ၁။ MAIN PREVIEW AREA (Camera သို့မဟုတ် Photo/Video Display) ---
+            // --- 1. CAMERA PREVIEW / MEDIA PREVIEW ---
             Positioned.fill(
-              child: _selectedFile != null
-                  ? (_isVideo
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.video_library,
-                                  size: 64, color: Colors.pinkAccent),
-                              const SizedBox(height: 12),
-                              Text(
-                                'Selected Video:\n${_selectedFile!.path.split('/').last}',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ],
+              child: _applyFilter(
+                _selectedFile != null
+                    ? Image.file(_selectedFile!, fit: BoxFit.cover)
+                    : (_isCameraInitialized && _cameraController != null)
+                        ? CameraPreview(_cameraController!)
+                        : const Center(
+                            child: CircularProgressIndicator(color: Colors.white),
                           ),
-                        )
-                      : Image.file(_selectedFile!, fit: BoxFit.cover))
-                  : (_isCameraInitialized &&
-                          _cameraController != null &&
-                          _cameraController!.value.isInitialized
-                      ? CameraPreview(_cameraController!)
-                      : const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.pinkAccent,
-                          ),
-                        )),
+              ),
             ),
 
-            // --- ၂။ TOP CONTROL BAR (Close, Title, Next) ---
+            // Grid Overlay
+            if (_isGridOn && _selectedFile == null)
+              Positioned.fill(
+                child: Column(
+                  children: [
+                    Expanded(child: Row(children: [Expanded(child: Container(decoration: BoxDecoration(border: Border.all(color: Colors.white24)))), Expanded(child: Container(decoration: BoxDecoration(border: Border.all(color: Colors.white24)))), Expanded(child: Container(decoration: BoxDecoration(border: Border.all(color: Colors.white24))))])),
+                    Expanded(child: Row(children: [Expanded(child: Container(decoration: BoxDecoration(border: Border.all(color: Colors.white24)))), Expanded(child: Container(decoration: BoxDecoration(border: Border.all(color: Colors.white24)))), Expanded(child: Container(decoration: BoxDecoration(border: Border.all(color: Colors.white24))))])),
+                    Expanded(child: Row(children: [Expanded(child: Container(decoration: BoxDecoration(border: Border.all(color: Colors.white24)))), Expanded(child: Container(decoration: BoxDecoration(border: Border.all(color: Colors.white24)))), Expanded(child: Container(decoration: BoxDecoration(border: Border.all(color: Colors.white24))))])),
+                  ],
+                ),
+              ),
+
+            // --- 2. TOP CONTROL BAR ---
             Positioned(
-              top: 16,
+              top: 12,
               left: 16,
               right: 16,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.close,
-                        color: Colors.white, size: 28),
+                    icon: const Icon(Icons.close, color: Colors.white, size: 28),
                     onPressed: () => Navigator.maybePop(context),
                   ),
-                  const Text(
-                    'Create Post',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Proceeding to Post Edit...'),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      'Next',
-                      style: TextStyle(
-                        color: Colors.pinkAccent,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // --- ၃။ RIGHT SIDE TOOLBAR (Flip, Speed, Filter, Timer) ---
-            Positioned(
-              top: 80,
-              right: 16,
-              child: Column(
-                children: [
-                  _buildSideButton(
-                    icon: Icons.flip_camera_ios,
-                    label: 'Flip',
-                    isActive: false,
-                    onTap: _toggleCamera,
-                  ),
-                  const SizedBox(height: 20),
-                  _buildSideButton(
-                    icon: Icons.speed,
-                    label: _selectedSpeed,
-                    isActive: _selectedSpeed != '1.0x',
-                    onTap: () {
-                      setState(() {
-                        if (_selectedSpeed == '1.0x') {
-                          _selectedSpeed = '2.0x';
-                        } else if (_selectedSpeed == '2.0x') {
-                          _selectedSpeed = '0.5x';
-                        } else {
-                          _selectedSpeed = '1.0x';
-                        }
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  _buildSideButton(
-                    icon: Icons.auto_awesome,
-                    label: 'Filters',
-                    isActive: _isFilterOn,
-                    onTap: () {
-                      setState(() {
-                        _isFilterOn = !_isFilterOn;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  _buildSideButton(
-                    icon: Icons.timer,
-                    label: _timerSeconds > 0 ? '${_timerSeconds}s' : 'Timer',
-                    isActive: _timerSeconds > 0,
-                    onTap: () {
-                      setState(() {
-                        if (_timerSeconds == 0) {
-                          _timerSeconds = 3;
-                        } else if (_timerSeconds == 3) {
-                          _timerSeconds = 10;
-                        } else {
-                          _timerSeconds = 0;
-                        }
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-
-            // --- ၄။ BOTTOM BAR (Photo/Video Gallery Pickers & Record Button) ---
-            Positioned(
-              bottom: 20,
-              left: 0,
-              right: 0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  // Photo Picker Button
-                  IconButton(
-                    icon: const Icon(Icons.photo_library,
-                        color: Colors.white, size: 32),
-                    onPressed: () => _pickMedia(false),
-                  ),
-
-                  // Record Button
                   GestureDetector(
                     onTap: () {
-                      if (_selectedFile != null) {
-                        _clearSelectedMedia();
-                      }
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Sound Picker Opened')),
+                      );
                     },
                     child: Container(
-                      width: 72,
-                      height: 72,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                       decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 4),
-                        color: Colors.pinkAccent,
+                        color: Colors.black54,
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Icon(
-                        _selectedFile != null ? Icons.refresh : Icons.videocam,
-                        color: Colors.white,
-                        size: 36,
+                      child: const Row(
+                        children: [
+                          Icon(Icons.music_note, color: Colors.white, size: 18),
+                          SizedBox(width: 6),
+                          Text('Add sound', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                        ],
                       ),
                     ),
                   ),
-
-                  // Video Picker Button
-                  IconButton(
-                    icon: const Icon(Icons.video_collection,
-                        color: Colors.white, size: 32),
-                    onPressed: () => _pickMedia(true),
-                  ),
+                  const SizedBox(width: 28),
                 ],
+              ),
+            ),
+
+            // --- 3. RIGHT SIDE TOOLBAR ---
+            Positioned(
+              top: 12,
+              right: 12,
+              child: Column(
+                children: [
+                  _buildSideIcon(Icons.flip_camera_ios_outlined, 'Flip', _toggleCamera, false),
+                  _buildSideIcon(_isFlashOn ? Icons.flash_on : Icons.flash_off, 'Flash', _toggleFlash, _isFlashOn),
+                  _buildSideIcon(Icons.timer_outlined, _timerSeconds > 0 ? '${_timerSeconds}s' : 'Timer', () {
+                    setState(() {
+                      _timerSeconds = _timerSeconds == 0 ? 3 : (_timerSeconds == 3 ? 10 : 0);
+                    });
+                  }, _timerSeconds > 0),
+                  _buildSideIcon(Icons.grid_on, 'Grid', () => setState(() => _isGridOn = !_isGridOn), _isGridOn),
+                  _buildSideIcon(Icons.auto_awesome, 'Filter', () => setState(() => _isFilterOn = !_isFilterOn), _isFilterOn),
+                ],
+              ),
+            ),
+
+            // --- 4. BOTTOM SHUTTER & NAVIGATION BAR ---
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.only(bottom: 12, top: 12),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [Colors.black87, Colors.transparent],
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Camera Modes Line ('3m', '60s', '15s', 'PHOTO', 'TEXT')
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: ['3m', '60s', '15s', 'PHOTO', 'TEXT'].map((mode) {
+                          bool isSelected = _selectedMode == mode;
+                          return GestureDetector(
+                            onTap: () => setState(() => _selectedMode = mode),
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 10),
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                              decoration: isSelected
+                                  ? BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16))
+                                  : null,
+                              child: Text(
+                                mode,
+                                style: TextStyle(
+                                  color: isSelected ? Colors.black : Colors.white70,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Shutter Row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // Gallery Button
+                        GestureDetector(
+                          onTap: () => _pickMedia(_selectedMode != 'PHOTO'),
+                          child: Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.white, width: 2),
+                              color: Colors.grey[800],
+                            ),
+                            child: const Icon(Icons.photo_library, color: Colors.white, size: 24),
+                          ),
+                        ),
+
+                        // Shutter Button (Click to Snap or Record)
+                        GestureDetector(
+                          onTap: _handleShutterPress,
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 4),
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: _isRecording ? Colors.red : Colors.white,
+                              ),
+                              child: _selectedFile != null
+                                  ? const Icon(Icons.refresh, color: Colors.black)
+                                  : null,
+                            ),
+                          ),
+                        ),
+
+                        // Effects Button
+                        CircleAvatar(
+                          radius: 22,
+                          backgroundColor: Colors.grey[800],
+                          child: const Icon(Icons.star, color: Colors.amber, size: 22),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 18),
+
+                    // Navigation Modes ('CAMERA', 'CREATE', 'LIVE')
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: ['CAMERA', 'CREATE', 'LIVE'].map((tab) {
+                        bool isSelected = _selectedBottomTab == tab;
+                        return GestureDetector(
+                          onTap: () => setState(() => _selectedBottomTab = tab),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              tab,
+                              style: TextStyle(
+                                color: isSelected ? Colors.white : Colors.white54,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -296,32 +369,27 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     );
   }
 
-  // Side Control Button UI Helper
-  Widget _buildSideButton({
-    required IconData icon,
-    required String label,
-    required bool isActive,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Icon(
-            icon,
-            color: isActive ? Colors.pinkAccent : Colors.white,
-            size: 28,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              color: isActive ? Colors.pinkAccent : Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
+  Widget _buildSideIcon(IconData icon, String label, VoidCallback onTap, bool isActive) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Column(
+          children: [
+            Icon(icon, color: isActive ? Colors.pinkAccent : Colors.white, size: 28),
+            if (label.isNotEmpty) ...[
+              const SizedBox(height: 2),
+              Text(
+                label,
+                style: TextStyle(
+                  color: isActive ? Colors.pinkAccent : Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
