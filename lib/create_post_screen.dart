@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreatePostScreen extends StatefulWidget {
   const CreatePostScreen({super.key});
@@ -11,8 +13,42 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   bool isFrontCamera = true;
   String selectedSpeed = '1.0x';
   String? selectedMusic;
+  XFile? selectedFile;
+  final ImagePicker _picker = ImagePicker();
 
-  // Music Selection Dialog
+  // ဖုန်း Gallery ထဲမှ ဓာတ်ပုံ ရွေးချယ်သည့် Function
+  Future<void> _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        selectedFile = image;
+      });
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Selected Photo: ${image.name}')),
+        );
+      }
+    }
+  }
+
+  // ဖုန်း Gallery ထဲမှ ဗီဒီယို ရွေးချယ်သည့် Function
+  Future<void> _pickVideo() async {
+    final XFile? video = await _picker.pickVideo(source: ImageSource.gallery);
+    if (video != null) {
+      setState(() {
+        selectedFile = video;
+      });
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Selected Video: ${video.name}')),
+        );
+      }
+    }
+  }
+
+  // Music Selection Sheet
   void _showMusicPicker(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -79,7 +115,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     );
   }
 
-  // Gallery Picker Sheet
+  // Upload Media Panel
   void _showGalleryPicker(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -102,12 +138,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Photo Gallery Opened')),
-                      );
-                    },
+                    onTap: _pickImage,
                     child: Column(
                       children: const [
                         CircleAvatar(
@@ -121,12 +152,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Video Gallery Opened')),
-                      );
-                    },
+                    onTap: _pickVideo,
                     child: Column(
                       children: const [
                         CircleAvatar(
@@ -156,44 +182,46 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            // Camera Preview Placeholder
+            // Display Image/Video Preview or Camera Text
             Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.videocam_outlined, color: Colors.white38, size: 80),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Camera Preview (${isFrontCamera ? "Front" : "Back"})',
-                    style: const TextStyle(color: Colors.white38, fontSize: 16),
-                  ),
-                  if (selectedMusic != null) ...[
-                    const SizedBox(height: 12),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: Colors.pinkAccent.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: Colors.pinkAccent),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.music_note, color: Colors.pinkAccent, size: 16),
-                          const SizedBox(width: 6),
-                          Text(
-                            selectedMusic!,
-                            style: const TextStyle(color: Colors.white, fontSize: 13),
+              child: selectedFile != null
+                  ? Image.file(File(selectedFile!.path), fit: BoxFit.cover)
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.videocam_outlined, color: Colors.white38, size: 80),
+                        const SizedBox(height: 12),
+                        Text(
+                          'Camera Preview (${isFrontCamera ? "Front" : "Back"})',
+                          style: const TextStyle(color: Colors.white38, fontSize: 16),
+                        ),
+                        if (selectedMusic != null) ...[
+                          const SizedBox(height: 12),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.pinkAccent.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(color: Colors.pinkAccent),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.music_note, color: Colors.pinkAccent, size: 16),
+                                const SizedBox(width: 6),
+                                Text(
+                                  selectedMusic!,
+                                  style: const TextStyle(color: Colors.white, fontSize: 13),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
-                      ),
+                      ],
                     ),
-                  ],
-                ],
-              ),
             ),
 
-            // Top Control Bar (Close, Title, Next)
+            // Top Control Bar
             Positioned(
               top: 16,
               left: 16,
@@ -232,7 +260,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               ),
             ),
 
-            // Right Side Controls (Flip, Speed, Filters, Timer)
+            // Right Side Controls
             Positioned(
               top: 80,
               right: 16,
@@ -281,7 +309,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               ),
             ),
 
-            // Bottom Control Area (Gallery, Record Button, Music Selection)
+            // Bottom Control Bar
             Positioned(
               bottom: 30,
               left: 0,
@@ -289,7 +317,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  // Gallery Upload Button (ပုံ/ဗီဒီယို တင်ရန်)
                   GestureDetector(
                     onTap: () => _showGalleryPicker(context),
                     child: Container(
@@ -301,8 +328,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       child: const Icon(Icons.photo_library, color: Colors.white, size: 28),
                     ),
                   ),
-
-                  // Record Button
                   GestureDetector(
                     onTap: () {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -326,8 +351,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       ),
                     ),
                   ),
-
-                  // Music Selector Button (သီချင်းထည့်ရန်)
                   GestureDetector(
                     onTap: () => _showMusicPicker(context),
                     child: Container(
