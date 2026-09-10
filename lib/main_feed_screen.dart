@@ -221,12 +221,7 @@ class MainFeedScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-
-            },
-          ),
+                ),
 
           // Top Blink Match Button
           Positioned(
@@ -256,15 +251,13 @@ class MainFeedScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+            ],
+            );
+            },
 
   static Widget _buildActionButton({
     required IconData icon,
