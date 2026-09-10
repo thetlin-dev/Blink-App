@@ -86,18 +86,18 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     );
   }
 
-  Future<void> _pickMedia(bool isVideo) async {
-    final XFile? file = isVideo
-        ? await _picker.pickVideo(source: ImageSource.gallery)
-        : await _picker.pickImage(source: ImageSource.gallery);
+ Future<void> _pickMedia([bool isVideo = false]) async {
+  final XFile? file = isVideo
+      ? await _picker.pickVideo(source: ImageSource.gallery)
+      : await _picker.pickImage(source: ImageSource.gallery);
 
-    if (file != null) {
-      setState(() {
-        _selectedFile = File(file.path);
-        _isVideo = isVideo;
-      });
-    }
+  if (file != null) {
+    setState(() {
+      _selectedFile = File(file.path);
+      _isVideo = isVideo;
+    });
   }
+} 
 
   Future<void> _handleShutterPress() async {
     if (_selectedFile != null) {
@@ -291,19 +291,19 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         // Gallery Button
-                        GestureDetector(
-                          onTap: () => _pickMedia(_selectedMode != 'PHOTO'),
-                          child: Container(
-                            width: 44,
-                            height: 44,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.white, width: 2),
-                              color: Colors.grey[800],
-                            ),
-                            child: const Icon(Icons.photo_library, color: Colors.white, size: 24),
-                          ),
-                        ),
+GestureDetector(
+  onTap: () => _pickMedia(false), // ဓာတ်ပုံရွေးရန်အတွက် false တိုက်ရိုက်ပေးပါ
+  child: Container(
+    width: 44,
+    height: 44,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: Colors.white, width: 2),
+      color: Colors.grey[850],
+    ),
+    child: const Icon(Icons.photo_library, color: Colors.white, size: 24),
+  ),
+),
 
                         // Shutter Button (Click to Snap or Record)
                         GestureDetector(
