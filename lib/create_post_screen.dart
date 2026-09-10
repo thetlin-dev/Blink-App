@@ -386,22 +386,31 @@ Future<void> _pickMedia([bool isVideo = false]) async {
     );
   }
 
-  Widget _buildSideIcon(IconData icon, String label, VoidCallback onTap, bool isActive) {
+  Widget _buildSideIcon(
+    IconData icon,
+    String label,
+    VoidCallback onTap, [
+    bool isActive = false,
+  ]) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: GestureDetector(
         onTap: onTap,
         child: Column(
           children: [
-            Icon(icon, color: isActive ? Colors.pinkAccent : Colors.white, size: 28),
+            Icon(
+              icon,
+              color: isActive ? Colors.amber : Colors.white,
+              size: 28,
+            ),
             if (label.isNotEmpty) ...[
-              const SizedBox(height: 2),
+              const SizedBox(height: 4),
               Text(
                 label,
                 style: TextStyle(
-                  color: isActive ? Colors.pinkAccent : Colors.white,
+                  color: isActive ? Colors.amber : Colors.white,
                   fontSize: 10,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
@@ -411,3 +420,4 @@ Future<void> _pickMedia([bool isVideo = false]) async {
     );
   }
 }
+  
