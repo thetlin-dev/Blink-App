@@ -116,7 +116,7 @@ class _MainFeedScreenState extends State<MainFeedScreen> {
                     right: 16,
                     bottom: 20,
                     child: Column(
-                      crossAxisAlignment: CrossAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Username
                         const Text(
