@@ -141,54 +141,90 @@ class MainFeedScreen extends StatelessWidget {
                           onTap: () {},
                         ),
                         const SizedBox(height: 18),
-
-                        // Comment Button
-                        _buildActionButton(
-                          icon: Icons.chat_bubble_rounded,
-                          label: '1.2k',
-                          color: Colors.white,
-                          onTap: () {},
-                        ),
-                        const SizedBox(height: 18),
-
-                        // Combined Share / Copy Link Button with Count
-                        _buildActionButton(
-                          icon: Icons.share_rounded,
-                          label: '1.2k',
-                          color: Colors.white,
-                          onTap: () => _showShareOptions(context),
-                          onLongPress: () => _showShareOptions(context),
-                        ),
-                      ],
+            // Bottom Content & Horizontal Action Buttons (Profile, Like, Comment, Share)
+            Positioned(
+              left: 16,
+              right: 16,
+              bottom: 20,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    '@thetlin_dev',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
+                  const SizedBox(height: 6),
+                  const Text(
+                    'Blink App UI Demo Video Feed ✨ #Flutter #BlinkApp',
+                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // Profile Avatar
+                      Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const CircleAvatar(
+                          radius: 18,
+                          backgroundColor: Colors.grey,
+                          child: Icon(Icons.person, color: Colors.white, size: 20),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
 
-                  // Bottom Caption / User Info Overlay
-                  Positioned(
-                    left: 16,
-                    bottom: 20,
-                    right: 80,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          '@thetlin_dev',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                      // Like Button
+                      GestureDetector(
+                        onTap: () {},
+                        child: Row(
+                          children: const [
+                            Icon(Icons.favorite, color: Colors.redAccent, size: 24),
+                            SizedBox(width: 4),
+                            Text('12.5k', style: TextStyle(color: Colors.white, fontSize: 13)),
+                          ],
                         ),
-                        SizedBox(height: 6),
-                        Text(
-                          'Blink App UI Demo Video Feed ✨ #Flutter #BlinkApp',
-                          style: TextStyle(color: Colors.white70, fontSize: 14),
+                      ),
+                      const SizedBox(width: 16),
+
+                      // Comment Button
+                      GestureDetector(
+                        onTap: () {},
+                        child: Row(
+                          children: const [
+                            Icon(Icons.chat_bubble_rounded, color: Colors.white, size: 22),
+                            SizedBox(width: 4),
+                            Text('1.2k', style: TextStyle(color: Colors.white, fontSize: 13)),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 16),
+
+                      // Share Button
+                      GestureDetector(
+                        onTap: () => _showShareOptions(context),
+                        onLongPress: () => _showShareOptions(context),
+                        child: Row(
+                          children: const [
+                            Icon(Icons.share_rounded, color: Colors.white, size: 22),
+                            SizedBox(width: 4),
+                            Text('1.2k', style: TextStyle(color: Colors.white, fontSize: 13)),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
-              );
+              ),
+            ),
+
             },
           ),
 
