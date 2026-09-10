@@ -97,50 +97,50 @@ class MainFeedScreen extends StatelessWidget {
         children: [
           // Video Feed Placeholder
           PageView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return Stack(
-                fit: StackFit.expand,
+      itemBuilder: (context, index) {
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            // Center Text
+            Center(
+              child: Text(
+                'Vertical Video Feed #${index + 1}',
+                style: const TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ),
+
+            // Right Action Buttons (like, Comment, Share)
+            Positioned(
+              right: 12,
+              bottom: 100,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Center Text
-                  Center(
-                    child: Text(
-                      'Vertical Video Feed #${index + 1}',
-                      style: const TextStyle(color: Colors.white, fontSize: 18),
+                  // Profile Avatar
+                  Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                    child: const CircleAvatar(
+                      radius: 27,
+                      backgroundColor: Colors.grey,
+                      child: Icon(Icons.person, color: Colors.white),
                     ),
                   ),
-
-                  // Right Action Buttons (Like, Comment, Share)
-                  Positioned(
-                    right: 12,
-                    bottom: 100,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // Profile Avatar
-                        Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 2),
-                          ),
-                          child: const CircleAvatar(
-                            radius: 22,
-                            backgroundColor: Colors.grey,
-                            child: Icon(Icons.person, color: Colors.white),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-
-                        // Like / Heart Button
-                        _buildActionButton(
-                          icon: Icons.favorite,
-                          label: '12.5k',
-                          color: Colors.redAccent,
-                          onTap: () {},
-                        ),
-                        const SizedBox(height: 18),
+                  const SizedBox(height: 20),
+                  // Like / Heart Button
+                  _buildActionButton(
+                    icon: Icons.favorite,
+                    label: '12.5k',
+                    color: Colors.redAccent,
+                    onTap: () {},
+                  ),
+                ],
+              ),
+            ),
+          ),
             // Bottom Content & Horizontal Action Buttons (Profile, Like, Comment, Share)
             Positioned(
               left: 16,
