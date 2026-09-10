@@ -10,7 +10,7 @@ class CreatePostScreen extends StatefulWidget {
   State<CreatePostScreen> createState() => _CreatePostScreenState();
 }
 
-class _CreatePostScreenState extends State<CreatePostScreen> {
+class _CreatePostScreenState extends State<CreatePostScreen> with WidgetsBindingObserver {
   CameraController? _cameraController;
   List<CameraDescription>? _cameras;
   int _selectedCameraIndex = 0;
@@ -30,11 +30,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   final ImagePicker _picker = ImagePicker();
 
-  @override
-  void initState() {
-    super.initState();
-    _initCamera();
-  }
+@override
+void initState() {
+  super.initState();
+  WidgetsBinding.instance.addObserver(this);
+  _initCamera();
+}
+
 
   Future<void> _initCamera() async {
     try {
@@ -131,12 +133,26 @@ Future<void> _pickMedia([bool isVideo = false]) async {
         });
       }
     }
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _cameraController?.dispose();
+    super.dispose();
   }
 
   @override
-  void dispose() {
-    _cameraController?.dispose();
-    super.dispose();
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final CameraController? cameraController = _cameraController;
+
+    if (cameraController == null || !cameraController.value.isInitialized) {
+      return;
+    }
+
+    if (state == AppLifecycleState.inactive) {
+      cameraController.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      _initCamera();
+    }
   }
 
   Widget _applyFilter(Widget child) {
