@@ -382,7 +382,7 @@ Future<void> _pickMedia([bool isVideo = false]) async {
             ),
           ],
         ),
-      ),
+      ],
     );
   }
 
@@ -419,5 +419,4 @@ Future<void> _pickMedia([bool isVideo = false]) async {
       ),
     );
   }
-}
   
