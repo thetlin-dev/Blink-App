@@ -260,4 +260,6 @@ class _MainFeedScreenState extends State<MainFeedScreen> {
           ),
         ],
       ),
-
+    );
+  }
+}
