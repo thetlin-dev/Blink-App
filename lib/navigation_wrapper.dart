@@ -13,21 +13,29 @@ class NavigationWrapper extends StatefulWidget {
 }
 
 class _NavigationWrapperState extends State<NavigationWrapper> {
-  // App စဖွင့်ချိန်တွင် Home Screen (Index 2) ကို ပထမဆုံး ပြသရန် 2 သို့ ပြောင်းထားပါသည်
   int _selectedIndex = 2;
 
-  final List<Widget> _screens = [
-    const CreatePostScreen(),     // Index 0: Create
-    const SearchExploreScreen(),  // Index 1: Explore
-    const MainFeedScreen(),       // Index 2: Home
-    const NotificationsScreen(),  // Index 3: Activity
-    const SettingsScreen(),       // Index 4: Profile
+  final List<Widget> _screens = const [
+    SizedBox(),
+    SearchExploreScreen(),
+    MainFeedScreen(),
+    NotificationsScreen(),
+    SettingsScreen(),
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index == 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const CreatePostScreen(),
+        ),
+      );
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override
