@@ -9,19 +9,15 @@ class CreatePostScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Background Image
           Positioned.fill(
             child: Image.network(
               'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000&auto=format&fit=crop',
               fit: BoxFit.cover,
             ),
           ),
-
-          // Foreground UI Controls
           SafeArea(
             child: Column(
               children: [
-                // Top Navigation Controls
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Row(
@@ -61,10 +57,7 @@ class CreatePostScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 const Spacer(),
-
-                // Bottom Controls
                 Padding(
                   padding: const EdgeInsets.only(bottom: 20.0),
                   child: Column(
