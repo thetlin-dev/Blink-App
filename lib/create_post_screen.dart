@@ -76,11 +76,15 @@ class CreatePostScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          const CircleAvatar(
-                            radius: 20,
-                            backgroundColor: Colors.orange,
-                            child: Icon(Icons.person, color: Colors.white),
-                          ),
+GestureDetector(
+  onTap: _pickMedia,
+  child: const CircleAvatar(
+    radius: 20,
+    backgroundColor: Colors.orange,
+    child: Icon(Icons.photo_library, color: Colors.white),
+  ),
+),
+
                           Column(
                             children: [
                               Container(
