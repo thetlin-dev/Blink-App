@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 class CreatePostScreen extends StatelessWidget {
   const CreatePostScreen({Key? key}) : super(key: key);
 
+  void _pickMedia() {
+    // Add media picker logic here
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,9 +70,9 @@ class CreatePostScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Text('20s  ', style: TextStyle(color: Colors.white70, fontSize: 16)),
-                          Text('15s  ', style: TextStyle(color: Colors.white70, fontSize: 16)),
-                          Text('10s  ', style: TextStyle(color: Colors.white70, fontSize: 16)),
+                          Text('60s ', style: TextStyle(color: Colors.white70, fontSize: 16)),
+                          Text('15s ', style: TextStyle(color: Colors.white70, fontSize: 16)),
+                          Text('10s ', style: TextStyle(color: Colors.white70, fontSize: 16)),
                           Text('Photo', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
                         ],
                       ),
@@ -76,15 +80,14 @@ class CreatePostScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-GestureDetector(
-  onTap: _pickMedia,
-  child: const CircleAvatar(
-    radius: 20,
-    backgroundColor: Colors.orange,
-    child: Icon(Icons.photo_library, color: Colors.white),
-  ),
-),
-
+                          GestureDetector(
+                            onTap: _pickMedia,
+                            child: CircleAvatar(
+                              radius: 20,
+                              backgroundColor: Colors.orange,
+                              child: const Icon(Icons.photo_library, color: Colors.white),
+                            ),
+                          ),
                           Column(
                             children: [
                               Container(
