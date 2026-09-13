@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreatePostScreen extends StatelessWidget {
   const CreatePostScreen({Key? key}) : super(key: key);
 
-  void _pickMedia() {
-    // Add media picker logic here
+  Future<void> _pickMedia() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      print('Selected image path: ${image.path}');
+    }
   }
 
   @override
