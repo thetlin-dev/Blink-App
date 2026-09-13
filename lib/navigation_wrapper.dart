@@ -15,12 +15,12 @@ class NavigationWrapper extends StatefulWidget {
 class _NavigationWrapperState extends State<NavigationWrapper> {
   int _selectedIndex = 2;
 
-  final List<Widget> _screens = const [
-    SizedBox(),
-    SearchExploreScreen(),
-    MainFeedScreen(),
-    NotificationsScreen(),
-    SettingsScreen(),
+  final List<Widget> _screens = [
+    const SizedBox(),
+    const SearchExploreScreen(),
+    const MainFeedScreen(),
+    const NotificationsScreen(),
+    const SettingsScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -28,7 +28,7 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => C‌ameraScreen(),
+          builder: (context) => CameraScreen(),
         ),
       );
     } else {
@@ -49,17 +49,14 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_box, size: 32),
+            icon: Icon(Icons.add_a_photo),
             label: 'Create',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            label: 'Explore',
+            label: 'Search',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
