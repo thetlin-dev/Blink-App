@@ -28,7 +28,7 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CreatePostScreen(),
+          builder: (context) => C‌ameraScreen(),
         ),
       );
     } else {
