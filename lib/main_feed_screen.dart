@@ -171,7 +171,7 @@ class _MainFeedScreenState extends State<MainFeedScreen> {
                   : Container(
                       color: Colors.grey[900],
                       child: const Center(
-                        child: Text("Vertical Video Player Area", style: TextStyle(color: Colors.white55)),
+                        child: Text("Vertical Video Player Area", style: TextStyle(color: Colors.white54)),
                       ),
                     ),
             ),
