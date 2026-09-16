@@ -13,23 +13,21 @@ class NavigationWrapper extends StatefulWidget {
 }
 
 class _NavigationWrapperState extends State<NavigationWrapper> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 0;
 
-  final List<Widget> _screens = [
-    const SizedBox(),
-    const SearchExploreScreen(),
-    const MainFeedScreen(),
-    const NotificationsScreen(),
-    const SettingsScreen(),
+  final List<Widget> _screens = const [
+    MainFeedScreen(),
+    SearchExploreScreen(),
+    CreatePostScreen(),
+    NotificationsScreen(),
+    SettingsScreen(),
   ];
 
   void _onItemTapped(int index) {
-    if (index == 0) {
+    if (index == 2) {
       Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => CameraScreen(),
-        ),
+        MaterialPageRoute(builder: (context) => const CreatePostScreen()),
       );
     } else {
       setState(() {
@@ -49,18 +47,20 @@ class _NavigationWrapperState extends State<NavigationWrapper> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.pinkAccent,
+        unselectedItemColor: Colors.grey,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_a_photo),
-            label: 'Create',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.explore),
+            label: 'Explore',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_circle),
+            label: 'Create',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
