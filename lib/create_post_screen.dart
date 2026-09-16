@@ -3,33 +3,31 @@ import 'package:flutter/material.dart';
 void main() {
   runApp(const MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: BlinkCameraScreen(),
+    home: CreatePostScreen(),
   ));
 }
 
-class BlinkCameraScreen extends StatefulWidget {
-  const BlinkCameraScreen({super.key});
+class CreatePostScreen extends StatefulWidget {
+  const CreatePostScreen({super.key});
 
   @override
-  State<BlinkCameraScreen> createState() => _BlinkCameraScreenState();
+  State<CreatePostScreen> createState() => _CreatePostScreenState();
 }
 
-class _BlinkCameraScreenState extends State<BlinkCameraScreen> with SingleTickerProviderStateMixin {
+class _CreatePostScreenState extends State<CreatePostScreen> with SingleTickerProviderStateMixin {
   int _selectedModeIndex = 0;
   final List<String> _modes = ["Recap Mode", "15s Sync", "60s Video", "Photo"];
   
-  // States for Features
   bool _isRecording = false;
-  bool _isDualLensActive = true; // 3. Dual-Lens Split View
-  bool _isARFilterActive = false; // 5. AR Scene-Split Effects
-  bool _isBeatSyncActive = false; // 6. Beat-Sync Auto Cut
+  bool _isDualLensActive = true;
+  bool _isARFilterActive = false;
+  bool _isBeatSyncActive = false;
   
   late AnimationController _waveController;
 
   @override
   void initState() {
     super.initState();
-    // 2. Blink Radial Shutter - Neon Wave Animation
     _waveController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
@@ -49,13 +47,12 @@ class _BlinkCameraScreenState extends State<BlinkCameraScreen> with SingleTicker
       body: SafeArea(
         child: Stack(
           children: [
-            // 5. AR Scene-Split Effects Background Representation
             AnimatedContainer(
               duration: const Duration(milliseconds: 300),
               decoration: BoxDecoration(
                 gradient: _isARFilterActive
                     ? const LinearGradient(
-                        colors: [Colors.purple, Colors.deepPink, Colors.black],
+                        colors: [Colors.purple, Color(0xFFFF1493), Colors.black],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       )
@@ -70,7 +67,6 @@ class _BlinkCameraScreenState extends State<BlinkCameraScreen> with SingleTicker
               ),
             ),
 
-            // 3. Dual-Lens Split View (Dynamic Island Floating Preview)
             if (_isDualLensActive)
               Positioned(
                 top: 70,
@@ -79,7 +75,7 @@ class _BlinkCameraScreenState extends State<BlinkCameraScreen> with SingleTicker
                   width: 110,
                   height: 150,
                   decoration: BoxDecoration(
-                    color: Colors.black80,
+                    color: Colors.black.withOpacity(0.8),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: const Color(0xFFFF2B57), width: 1.5),
                     boxShadow: const [BoxShadow(color: Colors.black54, blurRadius: 10)],
@@ -97,8 +93,7 @@ class _BlinkCameraScreenState extends State<BlinkCameraScreen> with SingleTicker
                 ),
               ),
 
-            // 4. AI Smart Recap Script Anchor (Teleprompter Overlay)
-            if (_selectedModeIndex == 0) // When Recap Mode is selected
+            if (_selectedModeIndex == 0)
               Positioned(
                 top: 80,
                 left: 140,
@@ -134,7 +129,6 @@ class _BlinkCameraScreenState extends State<BlinkCameraScreen> with SingleTicker
                 ),
               ),
 
-            // Top Control Bar & 6. Beat-Sync Auto Cut
             Positioned(
               top: 16,
               left: 16,
@@ -144,7 +138,6 @@ class _BlinkCameraScreenState extends State<BlinkCameraScreen> with SingleTicker
                 children: [
                   const Icon(Icons.close, color: Colors.white, size: 28),
                   
-                  // 6. Beat-Sync Button
                   GestureDetector(
                     onTap: () {
                       setState(() {
@@ -160,7 +153,11 @@ class _BlinkCameraScreenState extends State<BlinkCameraScreen> with SingleTicker
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.music_note, color: _isBeatSyncActive ? Colors.white : const Color(0xFFFF2B57), size: 16),
+                          Icon(
+                            Icons.music_note, 
+                            color: _isBeatSyncActive ? Colors.white : const Color(0xFFFF2B57), 
+                            size: 16,
+                          ),
                           const SizedBox(width: 6),
                           Text(
                             _isBeatSyncActive ? "Beat-Sync Active" : "Add Beat-Sync Sound",
@@ -183,14 +180,12 @@ class _BlinkCameraScreenState extends State<BlinkCameraScreen> with SingleTicker
               ),
             ),
 
-            // Bottom Area with Shutter, Mode Bar & 1. Orbital Floating Actions Wheel
             Positioned(
               bottom: 30,
               left: 0,
               right: 0,
               child: Column(
                 children: [
-                  // Mode Selector
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -216,14 +211,12 @@ class _BlinkCameraScreenState extends State<BlinkCameraScreen> with SingleTicker
                   ),
                   const SizedBox(height: 30),
 
-                  // Shutter and Arc Floating Actions
                   SizedBox(
                     height: 120,
                     width: double.infinity,
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        // 1. Orbital Floating Actions Wheel (Arc-shaped Floating Bubbles)
                         Positioned(
                           left: 45,
                           bottom: 50,
@@ -237,7 +230,6 @@ class _BlinkCameraScreenState extends State<BlinkCameraScreen> with SingleTicker
                           child: _buildOrbitalBubble(Icons.subtitles, "Script", false, () {}),
                         ),
 
-                        // 2. Blink Radial Shutter with Neon Wave Pulse
                         GestureDetector(
                           onTap: () {
                             setState(() => _isRecording = !_isRecording);
@@ -293,7 +285,6 @@ class _BlinkCameraScreenState extends State<BlinkCameraScreen> with SingleTicker
     );
   }
 
-  // Helper method to create Orbital Floating Bubbles
   Widget _buildOrbitalBubble(IconData icon, String label, bool isActive, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
